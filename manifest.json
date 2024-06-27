@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "fondl",
+  "version": "1.0",
+  "description": "find and download fonts on any webpage",
+  "permissions": ["activeTab"],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ]
+}
