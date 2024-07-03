@@ -1,17 +1,36 @@
 let isPopupPinned = false;
-const API = "https://fondl-api.vercel.app"
+const API = "https://fondl-api.vercel.app";
 
-document.addEventListener("mouseover", function (event) {
+const enableScript = () => {
+  document.addEventListener("mouseover", mouseOverHandler);
+};
+
+const disableScript = () => {
+  document.removeEventListener("mouseover", mouseOverHandler);
+  const existingPopup = document.getElementById("font-popup");
+  if (existingPopup) {
+    existingPopup.remove();
+  }
+};
+
+const mouseOverHandler = (event) => {
   let element = event.target;
 
   if (element.nodeType === Node.TEXT_NODE && element.nodeValue.trim() !== "") {
     element = element.parentNode;
   }
 
-  if (
+  while (
+    element &&
     element.nodeType === Node.ELEMENT_NODE &&
-    element.childNodes.length === 1 &&
-    element.firstChild.nodeType === Node.TEXT_NODE &&
+    !element.textContent.trim()
+  ) {
+    element = element.parentNode;
+  }
+
+  if (
+    element &&
+    element.nodeType === Node.ELEMENT_NODE &&
     element.textContent.trim() !== ""
   ) {
     let fontFamily = window
@@ -74,7 +93,6 @@ document.addEventListener("mouseover", function (event) {
       element.addEventListener("click", function () {
         isPopupPinned = !isPopupPinned;
         if (!isPopupPinned) {
-          popup.remove();
           element.style.cursor = "";
           element.removeEventListener("mousemove", updatePopupPosition);
         }
@@ -148,5 +166,19 @@ document.addEventListener("mouseover", function (event) {
           await fetchAndDisplayFonts("befonts");
         });
     }
+  }
+};
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === "enable") {
+    enableScript();
+  } else if (message.action === "disable") {
+    disableScript();
+  }
+});
+
+chrome.storage.local.get(["enabled"], (result) => {
+  if (result.enabled) {
+    enableScript();
   }
 });
