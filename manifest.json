@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "fondl",
+  "name": "fondant",
   "version": "1.0",
   "description": "find and download fonts from a webpage",
   "permissions": ["activeTab", "storage", "scripting"],

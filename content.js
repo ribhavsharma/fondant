@@ -17,7 +17,7 @@ const mouseOverHandler = (event) => {
   let element = event.target;
 
   if (element.nodeType === Node.TEXT_NODE && element.nodeValue.trim() !== "") {
-    element = element.parentNode;
+    element = element.parentNode; 
   }
 
   while (
